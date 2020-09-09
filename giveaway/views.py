@@ -6,13 +6,16 @@ from django.views import View
 from django.views.generic import CreateView
 
 
+class RegisterView(View):
+    def get(self, request):
+        return render(request, 'registration/register.html')
+
+
 class LoginView(View):
     def get(self, request):
         return render(request, 'registration/login.html')
 
 
-class CreateUserView(CreateView):
-    model = User
-    form_class = UserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = "registration/new_user.html"
+class AddDonationView(View):
+    def get(self, request):
+        return render(request, 'form-confirmation.html')
