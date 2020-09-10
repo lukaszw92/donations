@@ -8,14 +8,14 @@ class Category(models.Model):
 
 class Institution(models.Model):
     institution_types = (
-        ("1", "non-government organisation"),
-        ("2", "local collection"),
-        ("3", "foundation"),
+        (1, "non-government organisation"),
+        (2, "local collection"),
+        (3, "foundation"),
     )
 
     name = models.CharField(max_length=255)
-    description = models.TextField
-    type = models.CharField(choices=institution_types, default='3', max_length=1)
+    description = models.TextField()
+    type = models.IntegerField(choices=institution_types, default=3)
     categories = models.ManyToManyField(Category)
 
 
@@ -28,7 +28,7 @@ class Donation(models.Model):
     zip_code = models.CharField(max_length=6)
     pick_up_date = models.DateField()
     pick_up_time = models.TimeField()
-    pick_up_comment = models.TextField
+    pick_up_comment = models.TextField()
     user = models.ForeignKey(User, null=True, default='Null', on_delete=models.CASCADE)
 
 
