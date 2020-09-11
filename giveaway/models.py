@@ -18,6 +18,10 @@ class Institution(models.Model):
     type = models.IntegerField(choices=institution_types, default=3)
     categories = models.ManyToManyField(Category)
 
+    @classmethod
+    def get_institutions_number(cls):
+        return len(Institution.objects.all())
+
 
 class Donation(models.Model):
     quantity = models.IntegerField()
@@ -30,5 +34,12 @@ class Donation(models.Model):
     pick_up_time = models.TimeField()
     pick_up_comment = models.TextField()
     user = models.ForeignKey(User, null=True, default='Null', on_delete=models.CASCADE)
+
+    @classmethod
+    def get_total_quantity(cls):
+        total = 0
+        for donation in Donation.objects.all():
+            total += donation.quantity
+        return total
 
 
