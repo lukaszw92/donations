@@ -35,8 +35,8 @@ class Donation(models.Model):
     pick_up_comment = models.TextField()
     user = models.ForeignKey(User, null=True, default='Null', on_delete=models.CASCADE)
 
-    @classmethod
-    def get_total_quantity(cls):
+    @staticmethod
+    def get_total_quantity():
         total = 0
         for donation in Donation.objects.all():
             total += donation.quantity
