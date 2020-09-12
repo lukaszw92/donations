@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -5,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView
 
-from giveaway.forms import RegistrationForm, NewUserCreationForm
+from giveaway.forms import NewUserCreationForm
 from giveaway.models import Donation, Institution, Category
 
 
@@ -47,20 +48,21 @@ class RegisterView(View):
         return render(request, 'registration/register.html', {'form': form})
 
 
-class LoginView(View):
+class LoginPageView(View):
     def get(self, request):
         return render(request, 'registration/login.html')
 
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-# def register(request):
-#     form = NewUserCreationForm()
-#     if request.method == 'POST':
-#         form = NewUserCreationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('login')
-#     return render(request, 'registration/register.html', {'form': form})
+        user = authenticate(request, password=password, username=username)
 
+        if user is not None:
+            login(request, user)
+            return redirect('/')
+
+        return render(request, 'registration/register.html')
 
 
 class AddDonationView(View):
