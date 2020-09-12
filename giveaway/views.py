@@ -1,10 +1,11 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView
 
+from giveaway.forms import RegistrationForm, NewUserCreationForm
 from giveaway.models import Donation, Institution, Category
 
 
@@ -24,16 +25,42 @@ class MainPageView(View):
 #     def get(self, request):
 #         return render(request, 'registration/register.html')
 
-class RegisterView(CreateView):
-    model = User
-    form_class = UserCreationForm
-    success_url = reverse_lazy('/')
-    template_name = "registration/register.html"
+# def register(request):
+#     form = NewUserCreationForm()
+#     if request.method == 'POST':
+#         form = NewUserCreationForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('login')
+#     return render(request, 'registration/register.html', {'form': form})
+
+class RegisterView(View):
+    def get(self, request):
+        form = NewUserCreationForm()
+        return render(request, 'registration/register.html', {'form': form})
+
+    def post(self, request):
+        form = NewUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+        return render(request, 'registration/register.html', {'form': form})
 
 
 class LoginView(View):
     def get(self, request):
         return render(request, 'registration/login.html')
+
+
+# def register(request):
+#     form = NewUserCreationForm()
+#     if request.method == 'POST':
+#         form = NewUserCreationForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('login')
+#     return render(request, 'registration/register.html', {'form': form})
+
 
 
 class AddDonationView(View):

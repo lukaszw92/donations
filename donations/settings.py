@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'donations.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'charity_donation',
+        'NAME': 'charity',
         'HOST': 'localhost',
         'USER': 'postgres',
         'PASSWORD': 'coderslab',
@@ -124,3 +124,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTH_USER_MODEL = 'giveaway.User'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
