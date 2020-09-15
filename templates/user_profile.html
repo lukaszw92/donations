@@ -1,0 +1,62 @@
+{% extends 'index.html' %}
+{% block content %}
+
+
+<h3>{{ user.first_name }} {{ user.last_name }} {{ user.email }} </h3>
+    <h3>Przekazałeś/aś</h3>
+
+    {% for donation in donations %}
+
+            <div class="summary">
+              <div class="form-section">
+                <h3>W dniu {{ donation.pick_up_date}} dla Organizacji: {{ donation.institution }}
+                    przekazano worków: {{ donation.quantity }} w kategoriach </h3>
+
+              <div class="form-section form-section--columns">
+                <div class="form-section--column">
+
+                  <ul>
+
+                      {% for category in donation.categories.all %}
+                    <li>{{ category }}</li>
+                          {% endfor %}
+
+                  </ul>
+                </div>
+
+         {% empty %}
+    Nie przekazałeś jeszcze żadnych darów
+
+                  {% endfor %}
+
+
+
+    <h3>Dary zaplanowane: </h3>
+
+    {% for donation in future_donations %}
+
+            <div class="summary">
+              <div class="form-section">
+                <h3>W dniu {{ donation.pick_up_date}} dla Organizacji: {{ donation.institution }}
+                    do przekazania: {{ donation.quantity }} w kategoriach </h3>
+
+              <div class="form-section form-section--columns">
+                <div class="form-section--column">
+
+                  <ul>
+
+                      {% for category in donation.categories.all %}
+                    <li>{{ category }}</li>
+                          {% endfor %}
+
+                  </ul>
+                </div>
+
+        {% empty %}
+    Nie masz zaplanowanych darów
+
+                  {% endfor %}
+
+
+
+{% endblock content %}
