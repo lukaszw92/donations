@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import ugettext_lazy as _
 
-from giveaway.models import Institution, Donation, Category
+from giveaway.models import Institution, Donation, Category, User
 
 
 admin.site.register(Institution)

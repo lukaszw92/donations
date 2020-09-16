@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       // TODO: get data from inputs and show them in summary
     }
-
+z
     /**
      * Submit form
      *
@@ -252,4 +252,9 @@ document.addEventListener("DOMContentLoaded", function() {
   if (form !== null) {
     new FormSteps(form);
   }
+
+  let category_checkbox = document.querySelectorAll(".checkbox")
+
+
+
 });

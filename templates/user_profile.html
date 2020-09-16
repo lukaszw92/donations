@@ -1,11 +1,67 @@
+
 {% extends 'index.html' %}
 {% block content %}
 
 
 <h3>{{ user.first_name }} {{ user.last_name }} {{ user.email }} </h3>
-    <h3>Przekazałeś/aś</h3>
 
-    {% for donation in donations %}
+    <h3>Potwierdź odbiór darów:</h3>
+
+    {% for donation in pending_donations %}
+
+            <div class="summary">
+              <div class="form-section">
+                <h3>Na dzień {{ donation.pick_up_date}} zaplanowano przekazanie darów dla organizacji: {{ donation.institution }}
+                    worków: {{ donation.quantity }} <a class="btn--highlighted" href="{{ donation.get_confirm_url }}">Potwierdź odbór</a> </h3>
+
+              <div class="form-section form-section--columns">
+                <div class="form-section--column">
+                    <h4>typ darów</h4>
+
+                  <ul>
+
+                      {% for category in donation.categories.all %}
+                    <li>{{ category }}</li>
+                          {% endfor %}
+
+                  </ul>
+                </div>
+
+         {% empty %}
+    Wszystkie dary potwierdzone lub nie przekazałeś jeszcze żadnych darów.
+                  {% endfor %}
+
+
+
+    <h3>Dary zaplanowane: </h3>
+
+    {% for donation in future_donations %}
+
+            <div class="summary">
+              <div class="form-section">
+                <h3>W dniu {{ donation.creation_date }} zaplanowano dar dla Organizacji: {{ donation.institution }} <br>
+                    do przekazania {{ donation.pick_up_date}}: {{ donation.quantity }} worków z darami z kategorii: </h3>
+
+              <div class="form-section form-section--columns">
+                <div class="form-section--column">
+
+                  <ul>
+
+                      {% for category in donation.categories.all %}
+                    <li>{{ category }}</li>
+                          {% endfor %}
+
+                  </ul>
+                </div>
+
+        {% empty %}
+    Nie masz zaplanowanych darów.
+                  {% endfor %}
+
+
+    <h3>Przekazane dary:</h3>
+
+    {% for donation in taken_donations %}
 
             <div class="summary">
               <div class="form-section">
@@ -23,39 +79,11 @@
 
                   </ul>
                 </div>
-
+potwierdzono odbiór dnia {{ donation.confirmation_date }}
          {% empty %}
-    Nie przekazałeś jeszcze żadnych darów
-
+    Nie przekazałeś jeszcze żadnych darów lub nie potwierdziłeś ich odbiororu.
                   {% endfor %}
 
-
-
-    <h3>Dary zaplanowane: </h3>
-
-    {% for donation in future_donations %}
-
-            <div class="summary">
-              <div class="form-section">
-                <h3>W dniu {{ donation.pick_up_date}} dla Organizacji: {{ donation.institution }}
-                    do przekazania: {{ donation.quantity }} w kategoriach </h3>
-
-              <div class="form-section form-section--columns">
-                <div class="form-section--column">
-
-                  <ul>
-
-                      {% for category in donation.categories.all %}
-                    <li>{{ category }}</li>
-                          {% endfor %}
-
-                  </ul>
-                </div>
-
-        {% empty %}
-    Nie masz zaplanowanych darów
-
-                  {% endfor %}
 
 
 

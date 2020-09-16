@@ -1,15 +1,12 @@
 from datetime import date
 
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect, reverse
-from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from giveaway.forms import NewUserCreationForm
+from django.shortcuts import render, redirect, reverse
+from django.views import View
+
+from giveaway.forms import NewUserCreationForm, NewUserEditForm
 from giveaway.models import Donation, Institution, Category
 
 
@@ -36,6 +33,27 @@ class RegisterView(View):
             form.save()
             return redirect('login')
         return render(request, 'registration/register.html', {'form': form})
+
+
+class EditUserView(View):
+
+    def get(self, request):
+        form = NewUserEditForm(instance=request.user)
+        return render(request, 'registration/user_edit.html', {'form': form})
+
+    def post(self, request):
+        wrong_password = "Podaj poprawne hasło"
+        password = request.POST.get('password')
+        form = NewUserEditForm(request.POST, instance=request.user)
+        user = authenticate(request, password=password, email=request.user.email)
+
+        if user is None:
+            return render(request, 'registration/user_edit.html', {'form': form, "wrong_password": wrong_password})
+
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+        return render(request, 'registration/user_edit.html', {'form': form})
 
 
 class LoginPageView(View):
@@ -81,16 +99,37 @@ class AddDonationView(LoginRequiredMixin, View):
         categories = request.POST.getlist('categories')
         new_donation.categories.set(categories)
 
-        return redirect(reverse('landing_page'))
+        return redirect(reverse('confirmation'))
+
 
 class UserProfile(LoginRequiredMixin, View):
 
     def get(self, request):
         user = request.user
-        donations = Donation.objects.filter(user=user.id, pick_up_date__lte=date.today())
-        future_donations = Donation.objects.filter(user=user.id, pick_up_date__gt=date.today())
-        context = {'user': user, 'donations': donations, 'future_donations': future_donations}
+        pending_donations = Donation.objects.filter(user=user.id, pick_up_date__lte=date.today(), is_taken=False)
+        taken_donations = Donation.objects.filter(user=user.id, pick_up_date__lte=date.today(),
+                                                  is_taken=True).order_by('pick_up_date')
+        future_donations = Donation.objects.filter(user=user.id, pick_up_date__gt=date.today()).order_by('creation_date')
+        context = {'user': user, 'pending_donations': pending_donations,
+                   'future_donations': future_donations,
+                   'taken_donations': taken_donations}
         return render(request, 'user_profile.html', context)
+
+
+class ConfirmPickupView(View):
+    def get(self, request, pk):
+        donation = Donation.objects.get(pk=pk)
+        return render(request, 'confirm_pickup.html', {'donation': donation})
+
+    def post(self, request, pk):
+        donation = Donation.objects.get(pk=pk)
+        if request.POST.get('confirmation') == 'Potwierdzam':
+            donation.is_taken = True
+            donation.confirmation_date = date.today()
+            donation.save()
+            return redirect(reverse('user_profile'))
+
+
 
 
 

@@ -1,6 +1,9 @@
+
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
+from django.urls import reverse
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -89,6 +92,12 @@ class Donation(models.Model):
     pick_up_time = models.TimeField()
     pick_up_comment = models.TextField()
     user = models.ForeignKey(User, null=True, default='Null', on_delete=models.CASCADE)
+    is_taken = models.BooleanField(default=False)
+    creation_date = models.DateField(auto_now_add=True)
+    confirmation_date = models.DateField(null=True, blank=True)
+
+    def get_confirm_url(self):
+        return reverse('confirm_pickup', args=(self.pk,))
 
     @staticmethod
     def get_total_quantity():

@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+{% block content %}
+
+    <form method="post">
+    {% csrf_token %}
+    <h3>Czy potwierdzasz odbiór przez kuriera daru dla {{ donation.institution }} w dniu {{ donation.pick_up_date }} ?</h3>
+    <input class="submit btn" type="submit" value="Potwierdzam" name="confirmation">
+</form>
+<a href="{% url 'user_profile' %}">Nie, wróc do mojego profilu</a>
+
+
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+{% block content %}
+
+    {{ wrong_password }}
+
+    <form method="post">
+          {% csrf_token %}
+<ul>
+    <li>Imię: {{ form.first_name }}</li>
+      <li> Nazwisko: {{ form.last_name }}</li>
+       <li> Adres e-mail: {{ form.email }}</li>
+
+    Aby zmienić dane podaj aktualne hasło <input type="password" name="password" />
+
+          <button type="submit">Potwierdź edycję danych</button>
+    <a href="{% url 'password_change' %}">Zmień hasło</a>
+
+     </ul>
+      </form>
+
+{% endblock content %}
