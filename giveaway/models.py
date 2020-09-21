@@ -1,4 +1,3 @@
-
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
@@ -6,6 +5,13 @@ from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
+
+
+def positive_validator(value):
+    if value <= 0:
+        raise ValidationError("Wartość musi być pozytywna.")
 
 
 class UserManager(BaseUserManager):
@@ -76,13 +82,20 @@ class Institution(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+    def get_categories_ids(self):
+        ids = []
+        for category in self.categories.all():
+            ids.append(category.id)
+        return ids
+
+
     @staticmethod
     def get_institutions_number():
         return len(Institution.objects.all())
 
 
 class Donation(models.Model):
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(validators=[positive_validator])
     categories = models.ManyToManyField(Category)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     address = models.CharField(max_length=255)
@@ -105,5 +118,3 @@ class Donation(models.Model):
         for donation in Donation.objects.all():
             total += donation.quantity
         return total
-
-

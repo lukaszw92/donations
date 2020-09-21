@@ -75,6 +75,8 @@ class LoginPageView(View):
 
 class AddDonationView(LoginRequiredMixin, View):
 
+    login_url = "/donations/login/"
+
     def get(self, request):
         categories = Category.objects.all()
         organisations = Institution.objects.all()

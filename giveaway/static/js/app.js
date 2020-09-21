@@ -221,6 +221,46 @@ document.addEventListener("DOMContentLoaded", function() {
     updateForm() {
       this.$step.innerText = this.currentStep;
 
+      //  if (this.currentStep === 1) {
+      //   var checkboxes = document.querySelectorAll("input[name=categories]");
+      //   var selectedCategoryIds = [];
+      //   for (var i=0; i < checkboxes.length; i++) {
+      //       if (checkboxes[i].checked) {
+      //           selectedCategoryIds.push(checkboxes[i].value)
+      //       }
+      //   }
+      //   var inst = document.querySelectorAll('input[name=institution]');
+      //   for (var i=0; i < inst.length; i++) {
+      //       var currentInstitutionCategories = inst[i].dataset.categoryIds
+      //       inst[i].parentElement.parentElement.style.display = 'block';
+      //
+      //       if (currentInstitutionCategories.filter(value => selectedCategoryIds.includes(value))) {
+      //           inst[i].parentElement.parentElement.style.display = 'none';
+      //       }
+      //   }
+      // }
+
+      if (this.currentStep === 3) {
+          let checked = document.querySelectorAll('div[data-step="1"] input[type=checkbox]:checked')
+          let checkedCategoryIds = []
+          for (let input of checked) {
+              checkedCategoryIds.push(parseInt(input.value))
+          }
+
+          let institutions = document.querySelectorAll('input[name=organization]');
+          for (let institution of institutions) {
+              let neededCategoryIds = JSON.parse(institution.dataset.catId)
+              institution.parentElement.parentElement.style.display = 'none';
+
+
+              if (neededCategoryIds.filter(value => checkedCategoryIds.includes(value)).length > 0) {
+                  institution.parentElement.parentElement.style.display = "block";
+
+              }
+          }
+      }
+
+
       // TODO: Validation
 
       this.slides.forEach(slide => {
@@ -234,9 +274,40 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
-      // TODO: get data from inputs and show them in summary
+      if (this.currentStep === 5) {
+
+        let numberOfBags = document.querySelector('input[name=bags]')
+        let bagsDisplay = document.getElementById('bags')
+        bagsDisplay.innerText = 'Worków: ' + numberOfBags.value
+
+        let selectedInstitutionDisplay = document.getElementById('selected_institution')
+
+        let institutions = document.querySelectorAll('input[name=organization]');
+        for (let institution of institutions) {
+           if (institution.checked) {
+             let name = institution.nextElementSibling.nextElementSibling.firstElementChild
+             selectedInstitutionDisplay.innerText = name.innerText
+           }
+         }
+
+        let street = document.querySelector('input[name=address]');
+        let city = document.querySelector('input[name=city]');
+        let postcode = document.querySelector('input[name=postcode]');
+        let phone = document.querySelector('input[name=phone]');
+        let date = document.querySelector('input[name=data]');
+        let time = document.querySelector('input[name=time]');
+        let info = document.querySelector('textarea[name=more_info]');
+
+        document.getElementById('address').innerHTML = street.value;
+        document.getElementById('city').innerText = city.value;
+        document.getElementById('postcode').innerText = postcode.value;
+        document.getElementById('phone').innerText = phone.value;
+        document.getElementById('data').innerHTML = date.value;
+        document.getElementById('time').innerHTML = time.value;
+        document.getElementById('info').innerText = info.value;
+      }
     }
-z
+
     /**
      * Submit form
      *
@@ -252,9 +323,5 @@ z
   if (form !== null) {
     new FormSteps(form);
   }
-
-  let category_checkbox = document.querySelectorAll(".checkbox")
-
-
 
 });
