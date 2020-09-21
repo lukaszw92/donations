@@ -221,24 +221,6 @@ document.addEventListener("DOMContentLoaded", function() {
     updateForm() {
       this.$step.innerText = this.currentStep;
 
-      //  if (this.currentStep === 1) {
-      //   var checkboxes = document.querySelectorAll("input[name=categories]");
-      //   var selectedCategoryIds = [];
-      //   for (var i=0; i < checkboxes.length; i++) {
-      //       if (checkboxes[i].checked) {
-      //           selectedCategoryIds.push(checkboxes[i].value)
-      //       }
-      //   }
-      //   var inst = document.querySelectorAll('input[name=institution]');
-      //   for (var i=0; i < inst.length; i++) {
-      //       var currentInstitutionCategories = inst[i].dataset.categoryIds
-      //       inst[i].parentElement.parentElement.style.display = 'block';
-      //
-      //       if (currentInstitutionCategories.filter(value => selectedCategoryIds.includes(value))) {
-      //           inst[i].parentElement.parentElement.style.display = 'none';
-      //       }
-      //   }
-      // }
 
       if (this.currentStep === 3) {
           let checked = document.querySelectorAll('div[data-step="1"] input[type=checkbox]:checked')
